@@ -11,9 +11,9 @@
             <img src="{{ p.image.url }}" alt="{{ p.name }}">
             <span class="pokemon-number">{{ p.number }}</span>
             <span class="pokemon-name">{{ p.name }}</span>
-            <input type="checkbox" id="pokemon-{{ p.id }}" name="pokemon[]" value="{{ p.id }}">
           </div>
-          <!-- <input type="checkbox" id="pokemon-{{ p.id }}" name="pokemon[]" value="{{ p.id }}" style="display:none"> -->
+          <input type="hidden" name="user_id" value="{{ request.user.id }}">
+          <input type="checkbox" id="pokemon-{{ p.id }}" name="pokemon[]" value="{{ p.id }}">
         </label>
       {% endfor %}
     </ul>

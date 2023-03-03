@@ -1,2 +1,4 @@
 db.sqlite3
 pokemon_images
+__pycache__/*
+*.pyc
