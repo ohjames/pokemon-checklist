@@ -1,0 +1,22 @@
+{% extends 'checklist/base.html' %}
+
+{% block content %}
+  <h1>Pokemon Checklist</h1>
+  <form method="post">
+    {% csrf_token %}
+    <ul class="pokemon-list">
+      {% for p in pokemon %}
+        <label for="pokemon-{{ p.id }}">
+          <div class="pokemon-container">
+            <img src="{{ p.image.url }}" alt="{{ p.name }}">
+            <span class="pokemon-number">{{ p.number }}</span>
+            <span class="pokemon-name">{{ p.name }}</span>
+            <input type="checkbox" id="pokemon-{{ p.id }}" name="pokemon[]" value="{{ p.id }}">
+          </div>
+          <!-- <input type="checkbox" id="pokemon-{{ p.id }}" name="pokemon[]" value="{{ p.id }}" style="display:none"> -->
+        </label>
+      {% endfor %}
+    </ul>
+    <input type="submit" value="Save">
+  </form>
+{% endblock %}

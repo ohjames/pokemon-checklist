@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <style>
+        .pokemon-list {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-gap: 20px;
+        }       
+        .pokemon-container {
+            display: inline-block;
+            text-align: center;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        .pokemon-container img {
+            max-width: 100%;
+        }
+        .pokemon-container input[type="checkbox"] {
+            display: none;
+        }
+        .pokemon-container input[type="checkbox"] + span:before {
+            content: "\\2610";
+            font-size: 24px;
+            color: grey;
+        }
+        .pokemon-container input[type="checkbox"]:checked + span:before {
+            content: "\\2611";
+            font-size: 24px;
+            color: green;
+        }
+        .pokemon-number {
+            display: block;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .pokemon-name {
+            display: block;
+            font-size: 14px;
+        }
+        /* input[type=checkbox]:not(:checked) + label img, input[type=checkbox]:not(:checked) + label .pokemon-number, input[type=checkbox]:not(:checked) + label .pokemon-name {
+            filter: grayscale(60%);
+        } */
+    </style>
+</head>
+<body>
+    {% block content %}{% endblock %}
+</body>
+</html>
