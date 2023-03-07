@@ -56,7 +56,7 @@ class PokeScraper():
         soup = BeautifulSoup(response.content, 'lxml')
         table = soup.find('table', {'class': 'dextable'})
         src = [i for i in table.find_all('img')]
-        images = [("https://www.serebii.net"+element['src']) for element in src if '.gif' not in element['src']]
+        images = [("=IMAGE(\"" + "https://www.serebii.net"+element['src']+ "\")") for element in src if '.gif' not in element['src']]
         return images
 
     def create_gen_df(self):
@@ -69,13 +69,13 @@ class PokeScraper():
     def get_region_header_info(self):
         response = requests.get(self.url)
         soup = BeautifulSoup(response.content, 'lxml')
-        table = soup.find('table', class_='tab')
+        table = soup.find('table', {'class': 'tab'})
         headers = []
         for i in table.find_all('tr')[:2]:
             for j in i:
                 headers.append(j.text)
-        headers = [i.removeprefix('\n\t\t') for i in headers]
-        headers = [i.removesuffix('\n\t\t') for i in headers]
+        headers = [i.removeprefix('\r\n\t\t') for i in headers]
+        headers = [i.removesuffix('\r\n\t\t') for i in headers]
         headers = [i.removesuffix('\t') for i in headers]
         headers = [i.replace('\n', '') for i in headers]
         headers = [i for i in headers if i]
@@ -87,43 +87,35 @@ class PokeScraper():
     def get_region_content_info(self):
         response = requests.get(self.url)
         soup = BeautifulSoup(response.content, 'lxml')
-        tables = soup.find_all('table')
-        table1 = tables[0].find_all('tr')
+        table = soup.find('table', {'class': 'tab'})
         content = []
-        # return(table1)
-        for i in table['tr']:
-            content.append(i.text)
-        for i in table[21]:
-            content.append(i.text)
-        content.pop(1)
-        content.pop(2)
-        
-        contents = []
+        for i in table.find_all('tr')[2:]:
+            for j in i:
+                content.append(j.text)
+        content = [i.removeprefix('\r\n\t\t') for i in content]
+        content = [i.removesuffix('\r\n\t\t') for i in content]
+        content = [i.replace('\n', '').replace(' ', '').replace('#', '') for i in content]
+        content = [i for i in content if i]
+
+        # Removes all the Japanese characters
         loweralphabets="abcdefghijklmnopqrstuvwxyz"
         upperalphabets="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         numbers="0123456789"
         desired_strings = loweralphabets + upperalphabets + numbers
-        # for i in table.find_all('tr')[2:]:
-        #     for j in i:
-        #         content.append(j.text)
-        content = [i.removeprefix('\n\r\n\t\t') for i in content]
-        content = [i.removesuffix('\r\n\n\t\t') for i in content]
-        content = [i.replace('\n', '').replace(' ', '').replace('#', '') for i in content]
-        content = [i for i in content if i]
-        # return content
-        # for i in content:
-        #     a = ""
-        #     for j in i:
-        #         if j in desired_strings:
-        #             a += j
-        #     contents.append(a)
-        # contents = [i for i in contents if i]
-        # return contents
+        contents = []
+        for i in content:
+            a = ""
+            for j in i:
+                if j in desired_strings:
+                    a += j
+            contents.append(a)
+        contents = [i for i in contents if i]
+        return contents
     
     def get_region_img_src(self):
         response = requests.get(self.url)
         soup = BeautifulSoup(response.content, 'lxml')
-        table = soup.find('table', class_='tab')
+        table = soup.find('table', {'class': 'tab'})
         src = [i for i in table.find_all('img')]
         images = [("=IMAGE(\"" + "https://www.serebii.net"+element['src']+ "\")") for element in src if '.gif' not in element['src']]
         return images
@@ -134,9 +126,6 @@ class PokeScraper():
         region_df.insert(2, "Pic", self.get_region_img_src())
         region_df.insert(loc = 0,column = 'Count',value = '')
         return region_df
-
-# df = PokeScraper('https://www.serebii.net/swordshield/galarianforms.shtml')
-# print(df.get_region_content_info())
 
 df = PokeScraper('https://www.serebii.net/pokemon/gen1pokemon.shtml').create_gen_df()
 df.drop(columns=['Count', 'Abilities', 'HP', 'Att', 'Def', 'S.Att', 'S.Def', 'Spd'], inplace=True)
