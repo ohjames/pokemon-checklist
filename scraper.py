@@ -56,7 +56,7 @@ class PokeScraper():
         soup = BeautifulSoup(response.content, 'lxml')
         table = soup.find('table', {'class': 'dextable'})
         src = [i for i in table.find_all('img')]
-        images = [("=IMAGE(\"" + "https://www.serebii.net"+element['src']+ "\")") for element in src if '.gif' not in element['src']]
+        images = [("https://www.serebii.net"+element['src']) for element in src if '.gif' not in element['src']]
         return images
 
     def create_gen_df(self):
@@ -117,7 +117,7 @@ class PokeScraper():
         soup = BeautifulSoup(response.content, 'lxml')
         table = soup.find('table', {'class': 'tab'})
         src = [i for i in table.find_all('img')]
-        images = [("=IMAGE(\"" + "https://www.serebii.net"+element['src']+ "\")") for element in src if '.gif' not in element['src']]
+        images = [("https://www.serebii.net"+element['src']) for element in src if '.gif' not in element['src']]
         return images
 
     def create_region_df(self):
