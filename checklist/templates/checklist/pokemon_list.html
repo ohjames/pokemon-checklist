@@ -2,22 +2,23 @@
 
 {% block content %}
 
-  <h1>Pokemon Checklist</h1>
-  <form method="post">
+  <h2>Pokemon List</h2>
+  <form method="POST">
     {% csrf_token %}
-    <ul class="pokemon-list">
-      {% for p in pokemon %}
-        <label for="pokemon-{{ p.id }}">
-          <div class="pokemon-container">
-            <img src="{{ p.image.url }}" alt="{{ p.name }}">
-            <span class="pokemon-number">{{ p.number }}</span>
-            <span class="pokemon-name">{{ p.name }}</span>
-          </div>
-          <input type="hidden" name="user_id" value="{{ request.user.id }}">
-          <input type="checkbox" id="pokemon-{{ p.id }}" name="pokemon[]" value="{{ p.id }}">
-        </label>
-      {% endfor %}
-    </ul>
-    <input type="submit" value="Save">
+    <!-- <ul class="pokemon-list"> -->
+    {% for p in pokemon %}
+      <label for="pokemon-{{ p.id }}">
+        <div class="pokemon-container">
+          <img src="{{ p.image.url }}" alt="{{ p.name }}">
+          <span class="pokemon-number">{{ p.number }}</span>
+          <span class="pokemon-name">{{ p.name }}</span>
+        </div>
+        <input type="hidden" name="user_id" value="{{ request.user.id }}">
+        <input type="checkbox" id="pokemon-{{ p.id }}" name="pokemon[]" value="{{ p.id }}">
+      </label>
+    {% endfor %}
+    <!-- </ul> -->
+    <button type="submit">Save</button>
   </form>
+
 {% endblock %}

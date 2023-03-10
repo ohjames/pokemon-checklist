@@ -126,18 +126,3 @@ class PokeScraper():
         region_df.insert(2, "Pic", self.get_region_img_src())
         region_df.insert(loc = 0,column = 'Count',value = '')
         return region_df
-
-df = PokeScraper('https://www.serebii.net/pokemon/gen1pokemon.shtml').create_gen_df()
-df.drop(columns=['Count', 'Abilities', 'HP', 'Att', 'Def', 'S.Att', 'S.Def', 'Spd'], inplace=True)
-
-for index, row in df.iterrows():
-    number = row['No.']
-    name = row['Name']
-    image_url = row['Pic']
-    response = requests.get(image_url)
-    image_file = ContentFile(response.content)
-    image_name = f'{number}.png'
-    # print(number, name)
-    pokemon = Pokemon(number=number, name=name)
-    pokemon.image.save(image_name, image_file)
-    pokemon.save()

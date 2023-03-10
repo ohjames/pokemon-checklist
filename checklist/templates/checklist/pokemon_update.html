@@ -1,11 +1,12 @@
 {% extends 'checklist/base.html' %}
+
 {% block content %}
 
-    <h2>Register</h2>
-    <form method="POST">
+    <h2>Update Pokemon</h2>
+    <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Register</button>
+        <button type="submit">Update</button>
     </form>
 
-{% endblock content %}
+{% endblock %}

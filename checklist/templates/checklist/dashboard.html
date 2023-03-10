@@ -1,9 +1,17 @@
 {% extends 'checklist/base.html' %}
+
 {% block content %}
 
-<div class="header-bar">
-    <div>
-        <h1>Hello {{request.user|title}}</h1>
-    </div>
-</div>
-{% endblock content %}
+    {% if user.is_authenticated %}
+        <h2>Welcome to the Checklist App, {{ user.username }}!</h2>
+        <a href="{% url 'logout' %}">Logout</a>
+        <p>Choose an option from the menu below:</p>
+        <ul>
+            <li><a href="{% url 'pokemon_list' %}">View Pokemon List</a></li>
+        </ul>
+    {% else %}
+        <h2>Welcome to the Checklist App!</h2>
+        <p>Please <a href="{% url 'login' %}">login</a> to access the dashboard.</p>
+    {% endif %}
+
+{% endblock %}
