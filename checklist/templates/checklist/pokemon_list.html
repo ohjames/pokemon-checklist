@@ -1,24 +1,25 @@
 {% extends 'checklist/base.html' %}
 
 {% block content %}
-
-  <h2>Pokemon List</h2>
-  <form method="POST">
-    {% csrf_token %}
-    <!-- <ul class="pokemon-list"> -->
-    {% for p in pokemon %}
-      <label for="pokemon-{{ p.id }}">
+<h1>Pokemon List</h1>
+<form method="POST" action="{% url 'mark_pokemon' %}">
+  {% csrf_token %}
+  <ul>
+    {% for pokemon in object_list %}
+      <li>
         <div class="pokemon-container">
-          <img src="{{ p.image.url }}" alt="{{ p.name }}">
-          <span class="pokemon-number">{{ p.number }}</span>
-          <span class="pokemon-name">{{ p.name }}</span>
+          <img class="pokemon-image" img src="{{ pokemon.image.url }}" alt="{{ pokemon.name }} image">
+          <div class="pokemon-info">
+            <input type="checkbox" name="pokemon" value="{{ pokemon.pk }}" {% if pokemon.completed %}checked{% endif %}>
+            <span class="pokemon-number">{{ pokemon.number }}</span>
+            <span class="pokemon-name">{{ pokemon.name }}</span>
+          </div>
         </div>
-        <input type="hidden" name="user_id" value="{{ request.user.id }}">
-        <input type="checkbox" id="pokemon-{{ p.id }}" name="pokemon[]" value="{{ p.id }}">
-      </label>
+      </li>
+    {% empty %}
+      <li>No Pokemon found.</li>
     {% endfor %}
-    <!-- </ul> -->
-    <button type="submit">Save</button>
-  </form>
-
+  </ul>
+  <button type="submit">Mark Complete</button>
+</form>
 {% endblock %}

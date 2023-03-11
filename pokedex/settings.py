@@ -30,7 +30,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 MEDIA_URL = ''
-MEDIA_ROOT = os.path.join('pokemon_images')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'pokemon_images')
 
 # Application definition
 

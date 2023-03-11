@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import RegisterPage, PokemonList, DashboardView, CustomLoginView, scraper
+from .views import RegisterPage, PokemonList, DashboardView, CustomLoginView, MarkPokemonView
 from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
@@ -8,5 +8,5 @@ urlpatterns = [
     path('pokemon/', PokemonList.as_view(), name='pokemon_list'),
     path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(next_page='dashboard'), name='logout'),
-    path('scraper/', scraper, name='scraper'),
+    path('mark/', MarkPokemonView.as_view(), name='mark_pokemon'),
 ]

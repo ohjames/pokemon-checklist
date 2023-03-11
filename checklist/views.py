@@ -96,8 +96,20 @@ class PokemonList(ListView):
     context_object_name = 'pokemon'
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        return queryset.filter(user=self.request.user)
+        # queryset = super().get_queryset()
+        # return queryset.filter(user=self.request.user)
+        return Pokemon.objects.filter(user=self.request.user)
+        # print(pokemon)
+        # return pokemon
 
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'checklist/dashboard.html'
+
+class MarkPokemonView(View):
+    def post(self, request):
+        pokemon_ids = request.POST.getlist('pokemon')
+        for pokemon_id in pokemon_ids:
+            pokemon = Pokemon.objects.get(pk=pokemon_id)
+            pokemon.completed = True
+            pokemon.save()
+        return redirect('pokemon_list')
