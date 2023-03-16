@@ -21,7 +21,6 @@ import sys
 sys.path.append(os.path.abspath('../'))
 from .scraper import PokeScraper
 
-from .forms import UserPokemonForm
 from .models import Pokemon, UserPokemon
 
 from django.http import HttpResponse
@@ -122,45 +121,45 @@ class PokedexView(ListView):
     def get_queryset(self):
         return self.model.objects.all()
 
-class UserPokemonUpdateView(LoginRequiredMixin, UpdateView):
-    model = UserPokemon
-    form_class = UserPokemonForm
-    template_name = 'checklist/checklist.html'
-    success_url = reverse_lazy('checklist')
+# class UserPokemonUpdateView(LoginRequiredMixin, UpdateView):
+#     model = UserPokemon
+#     form_class = UserPokemonForm
+#     template_name = 'checklist/checklist.html'
+#     success_url = reverse_lazy('checklist')
     
-    def get_queryset(self):
-        return UserPokemon.objects.filter(user=self.request.user)
+#     def get_queryset(self):
+#         return UserPokemon.objects.filter(user=self.request.user)
 
-class UserPokemonCreateView(LoginRequiredMixin, CreateView):
-    model = UserPokemon
-    form_class = UserPokemonForm
-    template_name = 'checklist/checklist.html'
-    success_url = reverse_lazy('checklist')
+# class UserPokemonCreateView(LoginRequiredMixin, CreateView):
+#     model = UserPokemon
+#     form_class = UserPokemonForm
+#     template_name = 'checklist/checklist.html'
+#     success_url = reverse_lazy('checklist')
 
-    def form_valid(self, form):
-        pokemon_ids = self.request.POST.getlist('pokemon')
-        pokemon_ids = [int(pokemon_id) for pokemon_id in pokemon_ids]
-        user = self.request.user
-        print('Selected Pokemon IDs:', pokemon_ids)
-        for pokemon_id in pokemon_ids:
-            try:
-                pokemon = Pokemon.objects.get(pk=pokemon_id)
-                user_pokemon = UserPokemon(user=user, pokemon=pokemon, completed=False)
-                user_pokemon.save()
-                print('Created UserPokemon:', user_pokemon)
-            except Pokemon.DoesNotExist:
-                print('Pokemon with ID', pokemon_id, 'does not exist')
-        return super().form_valid(form)
+#     def form_valid(self, form):
+#         pokemon_ids = self.request.POST.getlist('pokemon')
+#         pokemon_ids = [int(pokemon_id) for pokemon_id in pokemon_ids]
+#         user = self.request.user
+#         print('Selected Pokemon IDs:', pokemon_ids)
+#         for pokemon_id in pokemon_ids:
+#             try:
+#                 pokemon = Pokemon.objects.get(pk=pokemon_id)
+#                 user_pokemon = UserPokemon(user=user, pokemon=pokemon, completed=False)
+#                 user_pokemon.save()
+#                 print('Created UserPokemon:', user_pokemon)
+#             except Pokemon.DoesNotExist:
+#                 print('Pokemon with ID', pokemon_id, 'does not exist')
+#         return super().form_valid(form)
 
-class ToggleCaughtView(LoginRequiredMixin, View):
-    def post(self, request, pk):
-        user_pokemon = UserPokemon.objects.get(user=request.user, pokemon__pk=pk)
-        user_pokemon.completed = request.POST.get('completed') == 'true'
-        user_pokemon.save()
-        return JsonResponse({'updated': True})
+# class ToggleCaughtView(LoginRequiredMixin, View):
+#     def post(self, request, pk):
+#         user_pokemon = UserPokemon.objects.get(user=request.user, pokemon__pk=pk)
+#         user_pokemon.completed = request.POST.get('completed') == 'true'
+#         user_pokemon.save()
+#         return JsonResponse({'updated': True})
     
-    def get(self, request, pk):
-        return JsonResponse({'updated': False})
+#     def get(self, request, pk):
+#         return JsonResponse({'updated': False})
 
 # @login_required
 # def checklist(request):
