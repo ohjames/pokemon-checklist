@@ -1,17 +1,11 @@
 {% extends 'checklist/base.html' %}
 
 {% block content %}
-
-    {% if user.is_authenticated %}
-        <h2>Welcome to the Checklist App, {{ user.username }}!</h2>
-        <a href="{% url 'logout' %}">Logout</a>
-        <p>Choose an option from the menu below:</p>
-        <ul>
-            <li><a href="{% url 'pokemon_list' %}">View Pokemon List</a></li>
-        </ul>
-    {% else %}
-        <h2>Welcome to the Checklist App!</h2>
-        <p>Please <a href="{% url 'login' %}">login</a> to access the dashboard.</p>
-    {% endif %}
-
+  <h1>Welcome, {{ request.user.username }}!</h1>
+  <p>Here are some things you can do:</p>
+  <ul>
+    <li><a href="{% url 'pokemon_list' %}">View your Pokemon list</a></li>
+    <li><a href="{% url 'register' %}">Create a new account</a></li>
+    <li><a href="{% url 'logout' %}">Log out</a></li>
+  </ul>
 {% endblock %}
