@@ -9,11 +9,8 @@ import os
 import django
 from django.core.files.base import ContentFile
 
-
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pokedex.settings')
 django.setup()
-
-from checklist.models import Pokemon
 
 class PokeScraper():
     def __init__(self, url):
