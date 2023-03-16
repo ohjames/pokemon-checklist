@@ -12,15 +12,6 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, authenticate, get_user_model
 
-import uuid
-import requests
-from django.core.files.base import ContentFile
-
-import os
-import sys
-sys.path.append(os.path.abspath('../'))
-from .scraper import PokeScraper
-
 from .models import Pokemon, UserPokemon
 
 from django.http import HttpResponse
