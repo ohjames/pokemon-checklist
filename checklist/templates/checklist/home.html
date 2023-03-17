@@ -4,7 +4,6 @@
   <h1>Pokemon Checklist</h1>
   <form method="post" id="pokemon-form">
     <div class="pokemon-list">
-    
       {% csrf_token %}
       {% for p in pokedex %}
         <div class="pokemon-container {% if p.userpokemon.completed %} grayscale{% endif %}">
