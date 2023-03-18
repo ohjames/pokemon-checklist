@@ -1,19 +1,19 @@
 {% extends 'checklist/base.html' %}
 
 {% block content %}
-  <h1>My Pokedex Checklist</h1>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-  </form>
-  <h2>Pokedex Checklist</h2>
-  <ul>
-    {% for user_pokemon in user_pokemon_list %}
-      <li>
-        {{ user_pokemon.pokemon.name }}
-        <input type="checkbox" name="completed" {% if user_pokemon.completed %}checked{% endif %}>
-      </li>
-    {% endfor %}
-  </ul>
+  <h1>Pokemon Checklist</h1>
+  <div class="pokemon-list">
+    <form method="post" id="pokemon-form">
+      {% csrf_token %}
+      {% for user_pokemon in user_pokemon_list %}
+        <div class="pokemon-container {% if user_pokemon.completed %}grayscale{% endif %}">
+          <img src="{{ user_pokemon.pokemon.image.url }}" alt="{{ user_pokemon.pokemon.name }}">
+          <span class="pokemon-number">#{{ user_pokemon.pokemon.number }}</span>
+          <span class="pokemon-name">{{ user_pokemon.pokemon.name }}</span>
+          <input type="checkbox" name="{{ user_pokemon.id }}" {% if user_pokemon.completed %}checked{% endif %}>
+        </div>
+      {% endfor %}
+      <button type="submit">Save</button>
+    </form>
+  </div>
 {% endblock %}
