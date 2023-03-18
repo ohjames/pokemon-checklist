@@ -2,8 +2,8 @@
 
 {% block content %}
   <h1>Pokemon Checklist</h1>
-  <div class="pokemon-list">
-    <form method="post" id="pokemon-form">
+  <form method="post" id="pokemon-form">
+    <div class="pokemon-list">
       {% csrf_token %}
       {% for user_pokemon in user_pokemon_list %}
         <div class="pokemon-container {% if user_pokemon.completed %}grayscale{% endif %}">
@@ -14,6 +14,6 @@
         </div>
       {% endfor %}
       <button type="submit">Save</button>
-    </form>
-  </div>
+    </div>
+  </form>
 {% endblock %}
