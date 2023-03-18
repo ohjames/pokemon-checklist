@@ -1,21 +1,14 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.views import View
-from django.views.generic import CreateView, ListView, TemplateView
-from django.views.generic.edit import UpdateView
+from django.views.generic import CreateView, ListView
 from django.urls import reverse_lazy
-from django import forms
-from django.http import JsonResponse
 
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login, authenticate, get_user_model
+from django.contrib.auth import login, authenticate
 
 from .models import Pokemon, UserPokemon
-from .forms import UserPokemonForm
-
-from django.http import HttpResponse
 
 # Create your views here.
 
@@ -25,12 +18,20 @@ class CustomLoginView(LoginView):
     redirect_authenticated_user = True
 
     def get_success_url(self):
-        return reverse_lazy('home')
+        return reverse_lazy('checklist')
     
 class CustomRegisterView(CreateView):
     template_name = 'checklist/register.html'
     form_class = UserCreationForm
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('create_user_pokemon')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password1')
+        user = authenticate(username=username, password=password)
+        login(self.request, user)
+        return response
 
 class PokedexView(ListView):
     model = Pokemon
@@ -45,14 +46,6 @@ class UserPokemonUpdateView(LoginRequiredMixin, ListView):
     def get(self, request):
         user_pokemon_list = UserPokemon.objects.filter(user=request.user)
         return render(request, 'checklist/checklist.html', {'user_pokemon_list': user_pokemon_list})
-    # model = UserPokemon
-    # form_class = UserPokemonForm
-    # template_name = 'checklist/checklist.html'
-    # success_url = reverse_lazy('checklist')
-    
-    # def get_queryset(self):
-    #     user_pokemon_list = UserPokemon.objects.filter(user=self.request.user)
-    #     return user_pokemon_list
     
     def post(self, request, *args, **kwargs):
         # Save user's progress
@@ -60,7 +53,7 @@ class UserPokemonUpdateView(LoginRequiredMixin, ListView):
         for user_pokemon in user_pokemon_list:
             user_pokemon.completed = request.POST.get(str(user_pokemon.id), False)
             user_pokemon.save()
-        # Return JSON response instead of redirecting
+        # Redirect to checklist page
         return redirect('checklist')
 
 # Save for new users
@@ -75,63 +68,5 @@ class UserPokemonCreateView(LoginRequiredMixin, View):
             user_pokemon = UserPokemon(user=user, pokemon=pokemon, completed=False)
             user_pokemon.save()
 
-        # Redirect to home page
+        # Redirect to checklist page
         return redirect('checklist')
-
-    # model = UserPokemon
-    # form_class = UserPokemonForm
-    # template_name = 'checklist/checklist.html'
-    # success_url = reverse_lazy('checklist')
-
-    # def form_valid(self, form):
-    #     pokemon_ids = self.request.POST.getlist('pokemon')
-    #     pokemon_ids = [int(pokemon_id) for pokemon_id in pokemon_ids]
-    #     user = self.request.user
-    #     print('Selected Pokemon IDs:', pokemon_ids)
-    #     for pokemon_id in pokemon_ids:
-    #         try:
-    #             pokemon = Pokemon.objects.get(pk=pokemon_id)
-    #             user_pokemon = UserPokemon(user=user, pokemon=pokemon, completed=False)
-    #             user_pokemon.save()
-    #             print('Created UserPokemon:', user_pokemon)
-    #         except Pokemon.DoesNotExist:
-    #             print('Pokemon with ID', pokemon_id, 'does not exist')
-    #     return super().form_valid(form)
-
-# class ToggleCaughtView(LoginRequiredMixin, View):
-#     def post(self, request, pk):
-#         user_pokemon = UserPokemon.objects.get(user=request.user, pokemon__pk=pk)
-#         user_pokemon.completed = request.POST.get('completed') == 'true'
-#         user_pokemon.save()
-#         return JsonResponse({'updated': True})
-    
-#     def get(self, request, pk):
-#         return JsonResponse({'updated': False})
-
-# @login_required
-# def checklist(request):
-#     user_pokemon_list = UserPokemon.objects.filter(user=request.user)
-#     return render(request, 'checklist/checklist.html', {'user_pokemon_list': user_pokemon_list})
-
-# class RegisterPage(View):
-#     form_class = UserCreationForm
-#     template_name = 'checklist/register.html'
-#     # If logged in, redirect
-#     def get(self, request):
-#         if request.user.is_authenticated:
-#             return redirect('home')
-#         form = self.form_class()
-#         return render(request, self.template_name, {'form': form})
-#     # Once registered, redirect and after finishing registration, redirect
-#     def post(self, request):
-#         if request.user.is_authenticated:
-#             return redirect('home')
-#         form = self.form_class(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             username = form.cleaned_data.get('username')
-#             password = form.cleaned_data.get('password1')
-#             user = authenticate(request, username=username, password=password)
-#             login(request, user)
-#             return redirect('checklist')
-#         return render(request, self.template_name, {'form': form})
