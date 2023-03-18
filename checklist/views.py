@@ -13,83 +13,11 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, authenticate, get_user_model
 
 from .models import Pokemon, UserPokemon
+from .forms import UserPokemonForm
 
 from django.http import HttpResponse
 
 # Create your views here.
-# def scraper(user):
-#     df = PokeScraper('https://www.serebii.net/pokemon/gen1pokemon.shtml').create_gen_df()
-#     df.drop(columns=['Count', 'Abilities', 'HP', 'Att', 'Def', 'S.Att', 'S.Def', 'Spd'], inplace=True)
-#     new_pokemon = []
-#     for index, row in df.iterrows():
-#         number = row['No.']
-#         name = row['Name']
-#         image_url = row['Pic']
-#         p = Pokemon.objects.filter(number=number, name=name, userpokemon=None).first()
-#         if p:
-#             # updating existing pokemon with new image
-#             if not p.image:
-#                 image_name = f'{number}.png'
-#                 image_file = get_image_from_url(image_url)
-#                 p.image.save(image_name, image_file)
-#                 p.save()
-#         else:
-#             # Create new pokemon with new image
-#             image_name = f'{number}.png'
-#             image_file = get_image_from_url(image_url)
-#             p = Pokemon(number=number, name=name, identifier=uuid.uuid4())
-#             p.image.save(image_name, image_file)
-#             p.save()
-#         new_pokemon.append(p)
-#     # Save new Pokemon objects to database
-#     Pokemon.objects.bulk_create(new_pokemon)
-#     # return render(request, 'scraper.html', {'new_pokemon': new_pokemon})
-
-# def get_image_from_url(url):
-#     response = requests.get(url)
-#     return ContentFile(response.content)
-
-# User = get_user_model()
-
-# class PokemonList(LoginRequiredMixin, View):
-#     template_name = 'checklist/pokemon_list.html'
-#     def get(self, request):
-#         user_pokemon = UserPokemon.objects.filter(user=request.user)
-#         return render(request, self.template_name, {'user_pokemon': user_pokemon})
-
-# class PokemonDetailView(LoginRequiredMixin, View):
-#     template_name = 'checklist/pokemon_detail.html'
-#     def get(self, request, pokemon_id):
-#         pokemon = get_object_or_404(Pokemon, id=pokemon_id)
-#         user_pokemon = UserPokemon.objects.filter(user=request.user, pokemon=pokemon).first()
-#         return render(request, self.template_name, {'pokemon': pokemon, 'user_pokemon': user_pokemon})
-    
-# class ToggleCompletionView(LoginRequiredMixin, View):
-#     def post(self, request, pokemon_id):
-#         user_pokemon = UserPokemon.objects.filter(user=request.user, pokemon_id=pokemon_id).first()
-#         if user_pokemon:
-#             user_pokemon.completed = not user_pokemon.completed
-#             user_pokemon.save()
-#         return redirect('pokemon_detail', pokemon_id=pokemon_id)
-
-# class DashboardView(LoginRequiredMixin, View):
-#     template_name = 'checklist/dashboard.html'
-#     def get(self, request):
-#         return render(request, self.template_name)
-
-# class CustomLoginView(LoginView):
-#     template_name = 'checklist/login.html'
-#     def get(self, request):
-#         return render(request, self.template_name)
-    
-#     def post(self, request):
-#         username = request.POST.get('username')
-#         password = request.POST.get('password')
-#         user = authenticate(request, username=username, password=password)
-#         if user is not None:
-#             login(request, user)
-#             return redirect('dashboard')
-#         return render(request, self.template_name, {'error_message': 'Invalid login credentials'})
 
 class CustomLoginView(LoginView):
     template_name = 'checklist/login.html'
@@ -112,35 +40,61 @@ class PokedexView(ListView):
     def get_queryset(self):
         return self.model.objects.all()
 
-# class UserPokemonUpdateView(LoginRequiredMixin, UpdateView):
-#     model = UserPokemon
-#     form_class = UserPokemonForm
-#     template_name = 'checklist/checklist.html'
-#     success_url = reverse_lazy('checklist')
+# Save for current user
+class UserPokemonUpdateView(LoginRequiredMixin, View):
+    def get(self, request):
+        user_pokemon_list = UserPokemon.objects.filter(user=request.user)
+        return render(request, 'checklist/checklist.html', {'user_pokemon_list': user_pokemon_list})
+    # model = UserPokemon
+    # form_class = UserPokemonForm
+    # template_name = 'checklist/checklist.html'
+    # success_url = reverse_lazy('checklist')
     
-#     def get_queryset(self):
-#         return UserPokemon.objects.filter(user=self.request.user)
+    # def get_queryset(self):
+    #     return UserPokemon.objects.filter(user=self.request.user)
+    
+    # def post(self, request, *args, **kwargs):
+    #     # Save user's progress
+    #     user_pokemons = UserPokemon.objects.filter(user=request.user)
+    #     for user_pokemon in user_pokemons:
+    #         user_pokemon.completed = request.POST.get(str(user_pokemon.id), False)
+    #         user_pokemon.save()
+    #     return super().post(request, *args, **kwargs)
 
-# class UserPokemonCreateView(LoginRequiredMixin, CreateView):
-#     model = UserPokemon
-#     form_class = UserPokemonForm
-#     template_name = 'checklist/checklist.html'
-#     success_url = reverse_lazy('checklist')
+# Save for new users
+class UserPokemonCreateView(LoginRequiredMixin, View):
+    def get(self, request):
+        # Get all pokemon
+        pokemon_list = Pokemon.objects.all()
 
-#     def form_valid(self, form):
-#         pokemon_ids = self.request.POST.getlist('pokemon')
-#         pokemon_ids = [int(pokemon_id) for pokemon_id in pokemon_ids]
-#         user = self.request.user
-#         print('Selected Pokemon IDs:', pokemon_ids)
-#         for pokemon_id in pokemon_ids:
-#             try:
-#                 pokemon = Pokemon.objects.get(pk=pokemon_id)
-#                 user_pokemon = UserPokemon(user=user, pokemon=pokemon, completed=False)
-#                 user_pokemon.save()
-#                 print('Created UserPokemon:', user_pokemon)
-#             except Pokemon.DoesNotExist:
-#                 print('Pokemon with ID', pokemon_id, 'does not exist')
-#         return super().form_valid(form)
+        # Create UserPokemon objects for each Pokemon
+        user = request.user
+        for pokemon in pokemon_list:
+            user_pokemon = UserPokemon(user=user, pokemon=pokemon, completed=False)
+            user_pokemon.save()
+
+        # Redirect to home page
+        return redirect('checklist')
+
+    # model = UserPokemon
+    # form_class = UserPokemonForm
+    # template_name = 'checklist/checklist.html'
+    # success_url = reverse_lazy('checklist')
+
+    # def form_valid(self, form):
+    #     pokemon_ids = self.request.POST.getlist('pokemon')
+    #     pokemon_ids = [int(pokemon_id) for pokemon_id in pokemon_ids]
+    #     user = self.request.user
+    #     print('Selected Pokemon IDs:', pokemon_ids)
+    #     for pokemon_id in pokemon_ids:
+    #         try:
+    #             pokemon = Pokemon.objects.get(pk=pokemon_id)
+    #             user_pokemon = UserPokemon(user=user, pokemon=pokemon, completed=False)
+    #             user_pokemon.save()
+    #             print('Created UserPokemon:', user_pokemon)
+    #         except Pokemon.DoesNotExist:
+    #             print('Pokemon with ID', pokemon_id, 'does not exist')
+    #     return super().form_valid(form)
 
 # class ToggleCaughtView(LoginRequiredMixin, View):
 #     def post(self, request, pk):
