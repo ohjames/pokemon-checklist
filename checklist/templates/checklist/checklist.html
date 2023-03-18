@@ -10,7 +10,7 @@
           <img src="{{ user_pokemon.pokemon.image.url }}" alt="{{ user_pokemon.pokemon.name }}">
           <span class="pokemon-number">#{{ user_pokemon.pokemon.number }}</span>
           <span class="pokemon-name">{{ user_pokemon.pokemon.name }}</span>
-          <input type="checkbox" name="{{ user_pokemon.id }}" {% if user_pokemon.completed %}checked{% endif %}>
+          <input type="checkbox" name="{{ user_pokemon.id }}" value="True" {% if user_pokemon.completed %}checked{% endif %}>
         </div>
       {% endfor %}
       <button type="submit">Save</button>

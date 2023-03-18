@@ -41,7 +41,7 @@ class PokedexView(ListView):
         return self.model.objects.all()
 
 # Save for current user
-class UserPokemonUpdateView(LoginRequiredMixin, View):
+class UserPokemonUpdateView(LoginRequiredMixin, ListView):
     def get(self, request):
         user_pokemon_list = UserPokemon.objects.filter(user=request.user)
         return render(request, 'checklist/checklist.html', {'user_pokemon_list': user_pokemon_list})
@@ -51,15 +51,17 @@ class UserPokemonUpdateView(LoginRequiredMixin, View):
     # success_url = reverse_lazy('checklist')
     
     # def get_queryset(self):
-    #     return UserPokemon.objects.filter(user=self.request.user)
+    #     user_pokemon_list = UserPokemon.objects.filter(user=self.request.user)
+    #     return user_pokemon_list
     
-    # def post(self, request, *args, **kwargs):
-    #     # Save user's progress
-    #     user_pokemons = UserPokemon.objects.filter(user=request.user)
-    #     for user_pokemon in user_pokemons:
-    #         user_pokemon.completed = request.POST.get(str(user_pokemon.id), False)
-    #         user_pokemon.save()
-    #     return super().post(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        # Save user's progress
+        user_pokemon_list = UserPokemon.objects.filter(user=self.request.user)
+        for user_pokemon in user_pokemon_list:
+            user_pokemon.completed = request.POST.get(str(user_pokemon.id), False)
+            user_pokemon.save()
+        # Return JSON response instead of redirecting
+        return redirect('checklist')
 
 # Save for new users
 class UserPokemonCreateView(LoginRequiredMixin, View):
