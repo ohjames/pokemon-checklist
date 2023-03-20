@@ -33,17 +33,14 @@ class CustomRegisterView(CreateView):
         login(self.request, user)
         return response
 
-class PokedexView(TemplateView):
+class HomeView(View):
     template_name = 'checklist/home.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        pokemon_list = Pokemon.objects.all()
-        context['pokemon_list'] = pokemon_list
-        return context
+    def get(self, request):
+        return render(request, self.template_name)
 
 # Save for current user
-class UserPokemonUpdateView(ListView):
+class PokemonChecklistView(ListView):
     def get(self, request):
         user_pokemon_list = None
         if request.user.is_authenticated:
@@ -75,3 +72,9 @@ class UserPokemonCreateView(LoginRequiredMixin, View):
 
         # Redirect to checklist page
         return redirect('checklist')
+    
+class AboutView(View):
+    template_name = 'checklist/about.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
