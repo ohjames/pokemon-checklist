@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, TemplateView
 from django.urls import reverse_lazy
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -33,18 +33,23 @@ class CustomRegisterView(CreateView):
         login(self.request, user)
         return response
 
-class PokedexView(ListView):
-    model = Pokemon
-    context_object_name = 'pokedex'
+class PokedexView(TemplateView):
     template_name = 'checklist/home.html'
 
-    def get_queryset(self):
-        return self.model.objects.all()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pokemon_list = Pokemon.objects.all()
+        context['pokemon_list'] = pokemon_list
+        return context
 
 # Save for current user
-class UserPokemonUpdateView(LoginRequiredMixin, ListView):
+class UserPokemonUpdateView(ListView):
     def get(self, request):
-        user_pokemon_list = UserPokemon.objects.filter(user=request.user)
+        user_pokemon_list = None
+        if request.user.is_authenticated:
+            user_pokemon_list = UserPokemon.objects.filter(user=request.user)
+        else:
+            user_pokemon_list = Pokemon.objects.all()
         return render(request, 'checklist/checklist.html', {'user_pokemon_list': user_pokemon_list})
     
     def post(self, request, *args, **kwargs):
