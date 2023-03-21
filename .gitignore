@@ -2,3 +2,7 @@ db.sqlite3
 pokemon_images
 __pycache__/*
 *.pyc
+.DS_Store
+checklist/static/.DS_Store
+checklist/static/img/.DS_Store
+checklist/js
