@@ -1,3 +1,101 @@
+:root {
+    --dark: #374151;
+    --darker: #1F2937;
+    --darkest: #111827;
+    --gray: #6B7280;
+    --light: #EEE;
+    --pink: #EC4899;
+    --purple: #8B5CF6;
+    --blue: #0d6efd;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--darkest);
+    padding: 10px 20px;
+  }
+
+body {
+    margin: 0;
+}
+
+.navbar-brand {
+    flex: 1;
+    padding-top: 0.3125rem;
+    padding-bottom: 0.3125rem;
+    display: flex;
+    float: left;
+    align-items: center;
+    font-size: 1.25rem;
+    text-decoration: none;
+    color: var(--light);
+}
+
+.navbar-brand::after {
+    content: "|";
+    margin-left: 15px;
+    color: var(--light);
+}
+
+.collapse {
+    display: flex;
+}
+
+.navbar-nav {
+    display: flex;
+    gap: 5px;
+    list-style: none;
+    margin: 0;
+    padding: 5px;
+    font-size: 1.2rem;
+}
+
+.nav-item a {
+    color: var(--light);
+    text-decoration: none;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.nav-item a:hover {
+    background-color: red; 
+}
+
+.login-container {
+    position: absolute;
+    right: 20px;
+}
+
+.btn {
+    line-height: 1.5;
+    cursor: pointer;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 0.325rem 0.75rem;
+    font-size: 1.2rem;
+    border-radius: 0.5rem;
+    transition: color .15s ease-in-out,
+        background-color .15s ease-in-out,
+        border-color .15s ease-in-out,
+        box-shadow .15s ease-in-out;
+}
+
+.btn-primary {
+    color: var(--light);
+    background-color: var(--blue);
+    border-color: var(--blue);
+}
+
+.btn-nav {
+    line-height: unset;
+    border: unset;
+    padding: 0.2rem 1rem;
+    border-radius: 0.25rem;
+    transition: unset;
+}
+
 .pokemon-list {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
@@ -22,5 +120,5 @@
     font-size: 14px;
 }
 .grayscale {
-  filter: grayscale(100%);
+    filter: grayscale(100%);
 }
