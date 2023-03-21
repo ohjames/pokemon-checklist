@@ -1,10 +1,11 @@
 {% extends 'checklist/base.html' %}
 
 {% block content %}
-  <h1>Login</h1>
+  <h1 class="login-header">Login</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Login</button>
+        <button class="btn btn-primary btn-login">Login</button>
     </form>
+    <a class="register-link" href="/register/">Don't have an account? Register here.</a>
 {% endblock %}
