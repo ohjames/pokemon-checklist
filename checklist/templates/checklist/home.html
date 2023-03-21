@@ -1,5 +1,5 @@
 {% extends 'checklist/base.html' %}
-
+{% load static %}
 {% block title %}Pokémon Checklist{% endblock %}
 {% block content %}
 <h1>Pokémon Checklist</h1>
@@ -8,4 +8,5 @@
 <a href="/checklist/">
     <button class="btn btn-primary btn-home">Get started here</button>
 </a>
+<img class="desktop-img" src="{% static 'img/sample.png' %}">
 {% endblock %}
