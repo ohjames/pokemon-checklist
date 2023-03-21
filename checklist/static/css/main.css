@@ -100,8 +100,17 @@ h1 {
     text-align: center;
 }
 
-.lead {
+h2 {
+    text-align: left;
+    margin-left: 50px;
+}
+
+p {
     text-align: center;
+    margin-top: 20px;
+}
+
+.lead {
     margin-top: 20px;
 }
 
@@ -114,6 +123,17 @@ h1 {
     left: 50%;
     margin-top: 20px;
     transform: translate(-50%, -50%);
+}
+
+.about-header {
+    text-align: left;
+    margin-left: 50px;
+}
+
+.about-text {
+    text-align: left;
+    margin-left: 50px;
+    margin-right: 50px;
 }
 
 .pokemon-list {
