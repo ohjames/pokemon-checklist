@@ -96,6 +96,26 @@ body {
     transition: unset;
 }
 
+h1 {
+    text-align: center;
+}
+
+.lead {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.header-text {
+    color: gray;
+}
+
+.btn-home {
+    position: absolute;
+    left: 50%;
+    margin-top: 20px;
+    transform: translate(-50%, -50%);
+}
+
 .pokemon-list {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
