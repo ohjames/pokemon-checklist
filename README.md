@@ -2,6 +2,9 @@
 ## Description
 This project is a web server that allows users to keep track of which Pokemon that have caught in the Pokemon games. The server uses data scraped from [Serebii.net](https://serebii.net) to display information about all the Pokemon in the National Pokedex, and allows users to mark each Pokemon as "caught" or "not caught."
 
+## Preview
+![Preview](/checklist/static/img/sample.png)
+
 ## Installation
 To install and run this project, you will need to have Python 3.x, Django, requests, bs4, pandas, pillow, and lxml installed on your computer. Once you have these dependencies installed, follow these steps:
 
