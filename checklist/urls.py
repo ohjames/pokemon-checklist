@@ -12,5 +12,6 @@ urlpatterns = [
     path('checklist/', PokemonChecklistView.as_view(), name='checklist'),
     path('about/', AboutView.as_view(), name='about'),
     path('checklist/create/', UserPokemonCreateView.as_view(), name='create_user_pokemon'),
+    path('gen1/', PokemonChecklistView.as_view(), name='gen1'),
     
 ]
