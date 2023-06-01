@@ -8,7 +8,7 @@
     <div class="pokemon-list">
       {% if user.is_authenticated %}
       {% csrf_token %}
-      {% for user_pokemon in user_pokemon_list %}
+      {% for user_pokemon in user_pokemon_list|slice:":50" %}
         <div class="pokemon-container {% if user_pokemon.completed %}grayscale{% endif %}">
           <img src="{{ user_pokemon.pokemon.image.url }}" alt="{{ user_pokemon.pokemon.name }}">
           <span class="pokemon-number">#{{ user_pokemon.pokemon.number }}</span>
@@ -18,7 +18,7 @@
       {% endfor %}
       <button type="submit">Save</button>
       {% else %}
-      {% for pokemon in user_pokemon_list %}
+      {% for pokemon in user_pokemon_list|slice:":50" %}
         <div class="pokemon-container {% if pokemon.completed %}grayscale{% endif %}">
           <img src="{{ pokemon.image.url }}" alt="{{ pokemon.name }}">
           <span class="pokemon-number">#{{ pokemon.number }}</span>
