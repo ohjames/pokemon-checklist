@@ -18,26 +18,14 @@
         {% endfor %}
       <button type="submit">Save</button>
       {% else %}
-      <div class="row">
-        {% for pokemon in user_pokemon_list|slice:":150" %}
-          {% if forloop.counter0|divisibleby:50 %}
-            </div><div class="col-md-4">
-              <div class="row">
-          {% endif %}
-          <div class="col-md-2">
-            <div class="pokemon-container {% if pokemon.completed %}grayscale{% endif %}">
-              <img src="{{ pokemon.image.url }}" alt="{{ pokemon.name }}">
-              <span class="pokemon-number">#{{ pokemon.number }}</span>
-              <span class="pokemon-name">{{ pokemon.name }}</span>
-              <input type="checkbox" name="{{ pokemon.id }}" value="True" {% if user_pokemon.completed %}checked{% endif %}>
-            </div>
+        {% for pokemon in user_pokemon_list %}
+          <div class="pokemon-container {% if pokemon.completed %}grayscale{% endif %}">
+            <img src="{{ pokemon.image.url }}" alt="{{ pokemon.name }}">
+            <span class="pokemon-number">#{{ pokemon.number }}</span>
+            <span class="pokemon-name">{{ pokemon.name }}</span>
+            <input type="checkbox" name="{{ pokemon.id }}" value="True" {% if user_pokemon.completed %}checked{% endif %}>
           </div>
-          {% if forloop.counter0|divisibleby:50 or forloop.last %}
-              </div>
-            </div>
-          {% endif %}
         {% endfor %}
-      </div>
       {% endif %}
     </div>
   </form>
