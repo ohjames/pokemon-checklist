@@ -8,24 +8,36 @@
     <div class="pokemon-list">
       {% if user.is_authenticated %}
       {% csrf_token %}
-      {% for user_pokemon in user_pokemon_list|slice:":50" %}
-        <div class="pokemon-container {% if user_pokemon.completed %}grayscale{% endif %}">
-          <img src="{{ user_pokemon.pokemon.image.url }}" alt="{{ user_pokemon.pokemon.name }}">
-          <span class="pokemon-number">#{{ user_pokemon.pokemon.number }}</span>
-          <span class="pokemon-name">{{ user_pokemon.pokemon.name }}</span>
-          <input type="checkbox" name="{{ user_pokemon.id }}" value="True" {% if user_pokemon.completed %}checked{% endif %}>
-        </div>
-      {% endfor %}
+        {% for user_pokemon in user_pokemon_list|slice:":50" %}
+          <div class="pokemon-container {% if user_pokemon.completed %}grayscale{% endif %}">
+            <img src="{{ user_pokemon.pokemon.image.url }}" alt="{{ user_pokemon.pokemon.name }}">
+            <span class="pokemon-number">#{{ user_pokemon.pokemon.number }}</span>
+            <span class="pokemon-name">{{ user_pokemon.pokemon.name }}</span>
+            <input type="checkbox" name="{{ user_pokemon.id }}" value="True" {% if user_pokemon.completed %}checked{% endif %}>
+          </div>
+        {% endfor %}
       <button type="submit">Save</button>
       {% else %}
-      {% for pokemon in user_pokemon_list|slice:":50" %}
-        <div class="pokemon-container {% if pokemon.completed %}grayscale{% endif %}">
-          <img src="{{ pokemon.image.url }}" alt="{{ pokemon.name }}">
-          <span class="pokemon-number">#{{ pokemon.number }}</span>
-          <span class="pokemon-name">{{ pokemon.name }}</span>
-          <input type="checkbox" name="{{ pokemon.id }}" value="True" {% if user_pokemon.completed %}checked{% endif %}>
-        </div>
-      {% endfor %}
+      <div class="row">
+        {% for pokemon in user_pokemon_list|slice:":150" %}
+          {% if forloop.counter0|divisibleby:50 %}
+            </div><div class="col-md-4">
+              <div class="row">
+          {% endif %}
+          <div class="col-md-2">
+            <div class="pokemon-container {% if pokemon.completed %}grayscale{% endif %}">
+              <img src="{{ pokemon.image.url }}" alt="{{ pokemon.name }}">
+              <span class="pokemon-number">#{{ pokemon.number }}</span>
+              <span class="pokemon-name">{{ pokemon.name }}</span>
+              <input type="checkbox" name="{{ pokemon.id }}" value="True" {% if user_pokemon.completed %}checked{% endif %}>
+            </div>
+          </div>
+          {% if forloop.counter0|divisibleby:50 or forloop.last %}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
       {% endif %}
     </div>
   </form>
