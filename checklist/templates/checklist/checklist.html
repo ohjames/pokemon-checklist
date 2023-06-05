@@ -18,16 +18,18 @@
         {% endfor %}
       <button type="submit">Save</button>
       {% else %}
-      <div class="row">
         {% for pokemon in user_pokemon_list %}
+          {% if forloop.first or forloop.counter0|divisibleby:30 %}
+          <div class="pokemon-container-group">
+          {% endif %}
           <div class="pokemon-container {% if pokemon.completed %}grayscale{% endif %}">
             <img src="{{ pokemon.image.url }}" alt="{{ pokemon.name }}">
             <span class="pokemon-number">#{{ pokemon.number }}</span>
             <span class="pokemon-name">{{ pokemon.name }}</span>
             <input type="checkbox" name="{{ pokemon.id }}" value="True" {% if user_pokemon.completed %}checked{% endif %}>
           </div>
-          {% if forloop.counter|divisibleby:30 and not forloop.last %}
-            </div><div class="row">
+          {% if forloop.counter|divisibleby:30 or forloop.last %}
+            </div>
           {% endif %}
         {% endfor %}
       </div>
