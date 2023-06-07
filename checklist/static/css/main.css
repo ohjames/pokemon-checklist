@@ -163,6 +163,9 @@ p {
     grid-gap: 0;
     grid-auto-rows: min-content;
 }
+.pc-box-header {
+    display: flex;
+}
 .pokemon-container-group {
     display: grid;
     border: 2px solid #0d6efd;

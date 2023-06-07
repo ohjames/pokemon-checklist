@@ -20,7 +20,9 @@
       {% else %}
         {% for pokemon in user_pokemon_list %}
           {% if forloop.first or forloop.counter0|divisibleby:30 %}
-          <div class="pokemon-container-group">
+          <div class="pc-box">
+            <h2 class="pc-box-header">BOX {{ forloop.counter }}-{{ forloop.counter|add:'29' }}</h2>
+            <div class="pokemon-container-group">
           {% endif %}
           <div class="pokemon-container {% if pokemon.completed %}grayscale{% endif %}">
             <img src="{{ pokemon.image.url }}" alt="{{ pokemon.name }}">
@@ -30,6 +32,7 @@
           </div>
           {% if forloop.counter|divisibleby:30 or forloop.last %}
             </div>
+          </div>
           {% endif %}
         {% endfor %}
       </div>
